@@ -19,10 +19,10 @@ int main() {
         scanf("%s %d %d", p[i].pid, &p[i].arrival, &p[i].burst);
     }
 
-    // Sort by arrival time (FCFS)
+    // Stable sort by arrival time (do NOT disturb equal arrivals)
     for(int i = 0; i < n - 1; i++) {
         for(int j = 0; j < n - i - 1; j++) {
-            if (p[j].arrival > p[j+1].arrival) {
+            if(p[j].arrival > p[j+1].arrival) {
                 struct Process temp = p[j];
                 p[j] = p[j+1];
                 p[j+1] = temp;
@@ -31,7 +31,7 @@ int main() {
     }
 
     int currentTime = 0;
-    float totalWT = 0, totalTAT = 0;
+    float totalWT = 0.0, totalTAT = 0.0;
 
     for(int i = 0; i < n; i++) {
 
