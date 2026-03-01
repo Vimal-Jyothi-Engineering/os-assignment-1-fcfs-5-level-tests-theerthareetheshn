@@ -20,13 +20,13 @@ int main() {
         scanf("%s %d %d", p[i].pid, &p[i].arrival, &p[i].burst);
     }
 
-    // Sort by arrival time (FCFS)
+    // Stable Bubble Sort by arrival time (FCFS rule)
     for(int i = 0; i < n - 1; i++) {
-        for(int j = i + 1; j < n; j++) {
-            if(p[i].arrival > p[j].arrival) {
-                struct Process temp = p[i];
-                p[i] = p[j];
-                p[j] = temp;
+        for(int j = 0; j < n - i - 1; j++) {
+            if(p[j].arrival > p[j+1].arrival) {
+                struct Process temp = p[j];
+                p[j] = p[j+1];
+                p[j+1] = temp;
             }
         }
     }
@@ -36,6 +36,7 @@ int main() {
 
     for(int i = 0; i < n; i++) {
 
+        // Handle CPU idle time
         if(currentTime < p[i].arrival) {
             currentTime = p[i].arrival;
         }
@@ -49,7 +50,7 @@ int main() {
         totalTAT += p[i].turnaround;
     }
 
-    // EXACT FORMAT
+    // EXACT OUTPUT FORMAT
 
     printf("Waiting Time:\n");
     for(int i = 0; i < n; i++) {
