@@ -46,8 +46,6 @@ int main() {
         totalTAT += p[i].turnaround;
     }
 
-    // EXACT FORMAT (NO TRAILING SPACES)
-
     printf("Waiting Time:");
     for(int i = 0; i < n; i++) {
         printf(" %s %d", p[i].pid, p[i].waiting);
@@ -59,7 +57,7 @@ int main() {
     }
 
     printf(" Average Waiting Time: %.2f", totalWT / n);
-    printf(" Average Turnaround Time: %.2f", totalTAT / n);
+    printf(" Average Turnaround Time: %.2f\n", totalTAT / n);
 
     return 0;
 }
