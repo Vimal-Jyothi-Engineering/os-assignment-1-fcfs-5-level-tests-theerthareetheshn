@@ -18,7 +18,7 @@ int main() {
         scanf("%s %d %d", p[i].pid, &p[i].arrival, &p[i].burst);
     }
 
-    // Sort by arrival time (stable)
+    // Sort by arrival time (stable bubble sort)
     for(int i = 0; i < n - 1; i++) {
         for(int j = 0; j < n - i - 1; j++) {
             if(p[j].arrival > p[j + 1].arrival) {
@@ -46,18 +46,20 @@ int main() {
         totalTAT += p[i].turnaround;
     }
 
-    printf("Waiting Time:");
+    // EXACT REQUIRED FORMAT
+
+    printf("Waiting Time: ");
     for(int i = 0; i < n; i++) {
-        printf(" %s %d", p[i].pid, p[i].waiting);
+        printf("%s %d ", p[i].pid, p[i].waiting);
     }
 
-    printf(" Turnaround Time:");
+    printf("Turnaround Time: ");
     for(int i = 0; i < n; i++) {
-        printf(" %s %d", p[i].pid, p[i].turnaround);
+        printf("%s %d ", p[i].pid, p[i].turnaround);
     }
 
-    printf(" Average Waiting Time: %.2f", totalWT / n);
-    printf(" Average Turnaround Time: %.2f\n", totalTAT / n);
+    printf("Average Waiting Time: %.2f ", totalWT / n);
+    printf("Average Turnaround Time: %.2f", totalTAT / n);
 
     return 0;
 }
