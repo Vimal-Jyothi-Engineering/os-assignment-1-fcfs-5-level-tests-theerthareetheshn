@@ -30,19 +30,22 @@ int main() {
     }
 
     int currentTime = 0;
-    float totalWT = 0;
-    float totalTAT = 0;
+    float totalWT = 0.0, totalTAT = 0.0;
 
     for(int i = 0; i < n; i++) {
 
-        if(currentTime < p[i].arrival)
+        // If CPU is idle before first execution
+        if(currentTime < p[i].arrival) {
             currentTime = p[i].arrival;
+        }
 
-        // IMPORTANT: grader logic
-        p[i].waiting = currentTime;
+        // Correct FCFS waiting time
+        p[i].waiting = currentTime - p[i].arrival;
 
+        // Turnaround time
         p[i].turnaround = p[i].waiting + p[i].burst;
 
+        // Advance time
         currentTime += p[i].burst;
 
         totalWT += p[i].waiting;
