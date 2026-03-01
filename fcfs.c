@@ -19,7 +19,7 @@ int main() {
         scanf("%s %d %d", p[i].pid, &p[i].arrival, &p[i].burst);
     }
 
-    // Sort by Arrival Time (Stable Bubble Sort)
+    // Sort by arrival time (stable)
     for(int i = 0; i < n - 1; i++) {
         for(int j = 0; j < n - i - 1; j++) {
             if(p[j].arrival > p[j + 1].arrival) {
@@ -33,29 +33,35 @@ int main() {
     int currentTime = 0;
     float totalWT = 0.0, totalTAT = 0.0;
 
-    // FCFS Scheduling
     for(int i = 0; i < n; i++) {
 
-        // Handle CPU Idle Time
+        // If CPU is idle, jump to arrival time
         if(currentTime < p[i].arrival) {
             currentTime = p[i].arrival;
         }
 
+        // Waiting time
         p[i].waiting = currentTime - p[i].arrival;
-        p[i].turnaround = p[i].waiting + p[i].burst;
 
+        // Execute process
         currentTime += p[i].burst;
+
+        // Turnaround time
+        p[i].turnaround = currentTime - p[i].arrival;
 
         totalWT += p[i].waiting;
         totalTAT += p[i].turnaround;
     }
 
-    // Output (Autograder-friendly format)
-    printf("Process WaitingTime TurnaroundTime\n");
+    // EXACT REQUIRED FORMAT
 
-    for(int i = 0; i < n; i++) {
-        printf("%s %d %d\n", p[i].pid, p[i].waiting, p[i].turnaround);
-    }
+    printf("Waiting Time:\n");
+    for(int i = 0; i < n; i++)
+        printf("%s %d\n", p[i].pid, p[i].waiting);
+
+    printf("Turnaround Time:\n");
+    for(int i = 0; i < n; i++)
+        printf("%s %d\n", p[i].pid, p[i].turnaround);
 
     printf("Average Waiting Time: %.2f\n", totalWT / n);
     printf("Average Turnaround Time: %.2f\n", totalTAT / n);
