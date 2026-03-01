@@ -34,9 +34,8 @@ int main() {
 
     for(int i = 0; i < n; i++) {
 
-        if(currentTime < p[i].arrival) {
+        if(currentTime < p[i].arrival)
             currentTime = p[i].arrival;
-        }
 
         p[i].waiting = currentTime - p[i].arrival;
         p[i].turnaround = p[i].waiting + p[i].burst;
@@ -47,18 +46,16 @@ int main() {
         totalTAT += p[i].turnaround;
     }
 
-    // Print in grader expected format
-    for(int i = 0; i < n; i++) {
-        printf("%s %d %d %d %d\n",
-               p[i].pid,
-               p[i].arrival,
-               p[i].burst,
-               p[i].waiting,
-               p[i].turnaround);
-    }
+    printf("Waiting Time:\n");
+    for(int i = 0; i < n; i++)
+        printf("%s %d\n", p[i].pid, p[i].waiting);
+
+    printf("Turnaround Time:\n");
+    for(int i = 0; i < n; i++)
+        printf("%s %d\n", p[i].pid, p[i].turnaround);
 
     printf("Average Waiting Time: %.2f\n", totalWT / n);
-    printf("Average Turnaround Time: %.2f\n", totalTAT / n);
+    printf("Average Turnaround Time: %.2f", totalTAT / n);
 
     return 0;
 }
