@@ -18,7 +18,7 @@ int main() {
         scanf("%s %d %d", p[i].pid, &p[i].arrival, &p[i].burst);
     }
 
-    // Sort by arrival time (stable)
+    // Stable sort by arrival time
     for(int i = 0; i < n - 1; i++) {
         for(int j = 0; j < n - i - 1; j++) {
             if(p[j].arrival > p[j + 1].arrival) {
@@ -29,23 +29,19 @@ int main() {
         }
     }
 
-    float totalWT = 0, totalTAT = 0;
     int currentTime = 0;
+    float totalWT = 0, totalTAT = 0;
 
     for(int i = 0; i < n; i++) {
 
-        // Only adjust time if CPU is idle BEFORE starting this process
         if(currentTime < p[i].arrival)
             currentTime = p[i].arrival;
 
-        p[i].waiting = currentTime - p[i].arrival;
-
-        if(p[i].waiting < 0)
-            p[i].waiting = 0;
-
-        currentTime += p[i].burst;
+        p[i].waiting = currentTime;
 
         p[i].turnaround = p[i].waiting + p[i].burst;
+
+        currentTime += p[i].burst;
 
         totalWT += p[i].waiting;
         totalTAT += p[i].turnaround;
