@@ -29,34 +29,30 @@ int main() {
         }
     }
 
-    int completionTime = 0;
     float totalWT = 0, totalTAT = 0;
+    int burstSum = 0;
 
     for(int i = 0; i < n; i++) {
-        if(completionTime > p[i].arrival) {
-            p[i].waiting = completionTime - p[i].arrival;
-        } else {
-            p[i].waiting = 0;
-            completionTime = p[i].arrival;
-        }
+        p[i].waiting = burstSum;
+        burstSum += p[i].burst;
+        p[i].turnaround = p[i].waiting + p[i].burst;
         
-        completionTime += p[i].burst;
-        p[i].turnaround = completionTime - p[i].arrival;
-
         totalWT += p[i].waiting;
         totalTAT += p[i].turnaround;
     }
 
-    printf("Waiting Time:\n");
-    for(int i = 0; i < n; i++)
-        printf("%s %d\n", p[i].pid, p[i].waiting);
+    printf("Waiting Time: ");
+    for(int i = 0; i < n; i++) {
+        printf("%s %d ", p[i].pid, p[i].waiting);
+    }
 
-    printf("Turnaround Time:\n");
-    for(int i = 0; i < n; i++)
-        printf("%s %d\n", p[i].pid, p[i].turnaround);
+    printf("\nTurnaround Time: ");
+    for(int i = 0; i < n; i++) {
+        printf("%s %d ", p[i].pid, p[i].turnaround);
+    }
 
-    printf("Average Waiting Time: %.2f\n", totalWT / n);
-    printf("Average Turnaround Time: %.2f\n", totalTAT / n);
+    printf("\nAverage Waiting Time: %.2f ", totalWT / n);
+    printf("Average Turnaround Time: %.2f", totalTAT / n);
 
     return 0;
 }
