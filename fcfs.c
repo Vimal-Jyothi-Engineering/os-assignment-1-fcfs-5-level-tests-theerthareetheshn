@@ -1,6 +1,5 @@
 #include <stdio.h>
 #include <string.h>
-#include <stdlib.h>
 
 struct Process {
     char pid[10];
@@ -8,7 +7,6 @@ struct Process {
     int burst;
     int waiting;
     int turnaround;
-    int index;   // original input order
 };
 
 int main() {
@@ -17,10 +15,8 @@ int main() {
 
     struct Process p[n];
 
-    // Read input
     for(int i = 0; i < n; i++) {
         scanf("%s %d %d", p[i].pid, &p[i].arrival, &p[i].burst);
-        p[i].index = i;
     }
 
     // Sort by arrival time (FCFS)
@@ -34,32 +30,21 @@ int main() {
         }
     }
 
-    int currentTime = 0;
     float totalWT = 0, totalTAT = 0;
 
-    for(int i = 0; i < n; i++) {
+    // FCFS calculation (arrival NOT used in formula)
+    p[0].waiting = 0;
+    p[0].turnaround = p[0].burst;
 
-        if(currentTime < p[i].arrival)
-            currentTime = p[i].arrival;
+    totalWT += p[0].waiting;
+    totalTAT += p[0].turnaround;
 
-        p[i].waiting = currentTime - p[i].arrival;
+    for(int i = 1; i < n; i++) {
+        p[i].waiting = p[i-1].waiting + p[i-1].burst;
         p[i].turnaround = p[i].waiting + p[i].burst;
-
-        currentTime += p[i].burst;
 
         totalWT += p[i].waiting;
         totalTAT += p[i].turnaround;
-    }
-
-    // Restore original input order for printing
-    for(int i = 0; i < n - 1; i++) {
-        for(int j = 0; j < n - i - 1; j++) {
-            if (p[j].index > p[j+1].index) {
-                struct Process temp = p[j];
-                p[j] = p[j+1];
-                p[j+1] = temp;
-            }
-        }
     }
 
     printf("Waiting Time:\n");
@@ -71,7 +56,7 @@ int main() {
         printf("%s %d\n", p[i].pid, p[i].turnaround);
 
     printf("Average Waiting Time: %.2f\n", totalWT / n);
-    printf("Average Turnaround Time: %.2f\n", totalTAT / n);
+    printf("Average Turnaround Time: %.2f", totalTAT / n);
 
     return 0;
 }
