@@ -37,11 +37,11 @@ int main() {
         if(currentTime < p[i].arrival)
             currentTime = p[i].arrival;
 
-        p[i].waiting = currentTime;
-
-        p[i].turnaround = p[i].waiting + p[i].burst;
+        p[i].waiting = currentTime - p[i].arrival;
 
         currentTime += p[i].burst;
+
+        p[i].turnaround = currentTime - p[i].arrival;
 
         totalWT += p[i].waiting;
         totalTAT += p[i].turnaround;
