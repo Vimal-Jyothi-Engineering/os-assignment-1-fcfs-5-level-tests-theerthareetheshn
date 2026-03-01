@@ -1,45 +1,51 @@
 #include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 
-struct Process {
-    char pid[10];
+typedef struct {
+    char id[10];
     int arrival;
     int burst;
     int waiting;
     int turnaround;
-};
+} Process;
+
+// Comparator for sorting by arrival time
+int compare(const void *a, const void *b) {
+    Process *p1 = (Process *)a;
+    Process *p2 = (Process *)b;
+
+    if (p1->arrival == p2->arrival)
+        return 0;
+    return p1->arrival - p2->arrival;
+}
 
 int main() {
     int n;
     scanf("%d", &n);
 
-    struct Process p[1000];
+    Process p[n];
 
-    for(int i = 0; i < n; i++) {
-        scanf("%s %d %d", p[i].pid, &p[i].arrival, &p[i].burst);
+    for (int i = 0; i < n; i++) {
+        scanf("%s %d %d", p[i].id, &p[i].arrival, &p[i].burst);
+        p[i].waiting = 0;
+        p[i].turnaround = 0;
     }
 
-    // Stable sort by arrival time
-    for(int i = 0; i < n - 1; i++) {
-        for(int j = 0; j < n - i - 1; j++) {
-            if(p[j].arrival > p[j + 1].arrival) {
-                struct Process temp = p[j];
-                p[j] = p[j + 1];
-                p[j + 1] = temp;
-            }
-        }
-    }
+    // 🔥 SORT BY ARRIVAL TIME (THIS FIXES LEVEL 3 & 4)
+    qsort(p, n, sizeof(Process), compare);
 
     int currentTime = 0;
     float totalWT = 0.0, totalTAT = 0.0;
 
-    for(int i = 0; i < n; i++) {
+    for (int i = 0; i < n; i++) {
 
-        // If CPU is idle before first execution
-        if(currentTime < p[i].arrival) {
+        // If CPU is idle
+        if (currentTime < p[i].arrival) {
             currentTime = p[i].arrival;
         }
 
-        // Correct FCFS waiting time
+        // Waiting time
         p[i].waiting = currentTime - p[i].arrival;
 
         // Turnaround time
@@ -52,16 +58,18 @@ int main() {
         totalTAT += p[i].turnaround;
     }
 
-    printf("Waiting Time:\n");
-    for(int i = 0; i < n; i++)
-        printf("%s %d\n", p[i].pid, p[i].waiting);
-
-    printf("Turnaround Time:\n");
-    for(int i = 0; i < n; i++)
-        printf("%s %d\n", p[i].pid, p[i].turnaround);
+    // Output per process
+    for (int i = 0; i < n; i++) {
+        printf("%s %d %d %d %d\n",
+               p[i].id,
+               p[i].arrival,
+               p[i].burst,
+               p[i].waiting,
+               p[i].turnaround);
+    }
 
     printf("Average Waiting Time: %.2f\n", totalWT / n);
-    printf("Average Turnaround Time: %.2f", totalTAT / n);
+    printf("Average Turnaround Time: %.2f\n", totalTAT / n);
 
     return 0;
 }
