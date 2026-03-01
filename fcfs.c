@@ -1,5 +1,4 @@
 #include <stdio.h>
-#include <string.h>
 
 struct Process {
     char pid[10];
@@ -19,7 +18,7 @@ int main() {
         scanf("%s %d %d", p[i].pid, &p[i].arrival, &p[i].burst);
     }
 
-    // Stable sort by arrival time (do NOT disturb equal arrivals)
+    // Stable sort by arrival time
     for(int i = 0; i < n - 1; i++) {
         for(int j = 0; j < n - i - 1; j++) {
             if(p[j].arrival > p[j+1].arrival) {
@@ -35,13 +34,17 @@ int main() {
 
     for(int i = 0; i < n; i++) {
 
-        if(currentTime < p[i].arrival)
-            currentTime = p[i].arrival;
+        int startTime;
 
-        p[i].waiting = currentTime - p[i].arrival;
+        if(currentTime < p[i].arrival)
+            startTime = p[i].arrival;
+        else
+            startTime = currentTime;
+
+        p[i].waiting = startTime - p[i].arrival;
         p[i].turnaround = p[i].waiting + p[i].burst;
 
-        currentTime += p[i].burst;
+        currentTime = startTime + p[i].burst;
 
         totalWT += p[i].waiting;
         totalTAT += p[i].turnaround;
