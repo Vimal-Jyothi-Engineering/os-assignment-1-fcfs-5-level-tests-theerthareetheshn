@@ -18,6 +18,7 @@ int main() {
         scanf("%s %d %d", p[i].pid, &p[i].arrival, &p[i].burst);
     }
 
+    // Sort by arrival time
     for(int i = 0; i < n - 1; i++) {
         for(int j = 0; j < n - i - 1; j++) {
             if(p[j].arrival > p[j + 1].arrival) {
@@ -31,22 +32,15 @@ int main() {
     float totalWT = 0, totalTAT = 0;
     int currentTime = 0;
 
-    currentTime = p[0].arrival;
-    p[0].waiting = 0;
-    currentTime += p[0].burst;
-    p[0].turnaround = p[0].waiting + p[0].burst;
+    for(int i = 0; i < n; i++) {
 
-    totalWT += p[0].waiting;
-    totalTAT += p[0].turnaround;
+        if(currentTime < p[i].arrival)
+            currentTime = p[i].arrival;
 
-    for(int i = 1; i < n; i++) {
         p[i].waiting = currentTime - p[i].arrival;
-
-        if(p[i].waiting < 0)
-            p[i].waiting = 0;
+        p[i].turnaround = p[i].waiting + p[i].burst;
 
         currentTime += p[i].burst;
-        p[i].turnaround = p[i].waiting + p[i].burst;
 
         totalWT += p[i].waiting;
         totalTAT += p[i].turnaround;
