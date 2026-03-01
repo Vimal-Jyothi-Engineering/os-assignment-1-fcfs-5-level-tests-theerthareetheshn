@@ -1,10 +1,8 @@
 #include <stdio.h>
 #include <string.h>
-#include <stdlib.h>
 
 struct Process {
     char pid[10];
-    int pid_num;      // numeric part of PID for sorting
     int arrival;
     int burst;
     int waiting;
@@ -17,19 +15,13 @@ int main() {
 
     struct Process p[n];
 
-    // Read input
-    for(int i = 0; i < n; i++) {
+    for(int i = 0; i < n; i++)
         scanf("%s %d %d", p[i].pid, &p[i].arrival, &p[i].burst);
-        p[i].pid_num = atoi(p[i].pid + 1);  // extract number from "P1"
-    }
 
-    // Sort by arrival time, if tie sort by PID number
+    // Sort by arrival
     for(int i = 0; i < n - 1; i++) {
         for(int j = 0; j < n - i - 1; j++) {
-            if (p[j].arrival > p[j+1].arrival ||
-               (p[j].arrival == p[j+1].arrival &&
-                p[j].pid_num > p[j+1].pid_num)) {
-
+            if(p[j].arrival > p[j+1].arrival) {
                 struct Process temp = p[j];
                 p[j] = p[j+1];
                 p[j+1] = temp;
@@ -37,18 +29,17 @@ int main() {
         }
     }
 
-    int currentTime = 0;
     float totalWT = 0, totalTAT = 0;
 
-    for(int i = 0; i < n; i++) {
+    p[0].waiting = 0;
+    p[0].turnaround = p[0].burst;
 
-        if(currentTime < p[i].arrival)
-            currentTime = p[i].arrival;
+    totalWT += p[0].waiting;
+    totalTAT += p[0].turnaround;
 
-        p[i].waiting = currentTime - p[i].arrival;
+    for(int i = 1; i < n; i++) {
+        p[i].waiting = p[i-1].waiting + p[i-1].burst;
         p[i].turnaround = p[i].waiting + p[i].burst;
-
-        currentTime += p[i].burst;
 
         totalWT += p[i].waiting;
         totalTAT += p[i].turnaround;
