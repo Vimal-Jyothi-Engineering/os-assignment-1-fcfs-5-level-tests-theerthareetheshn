@@ -30,18 +30,18 @@ int main() {
         }
     }
 
+    int currentTime = 0;
     float totalWT = 0, totalTAT = 0;
 
-    // FCFS calculation (arrival NOT used in formula)
-    p[0].waiting = 0;
-    p[0].turnaround = p[0].burst;
+    for(int i = 0; i < n; i++) {
 
-    totalWT += p[0].waiting;
-    totalTAT += p[0].turnaround;
+        if(currentTime < p[i].arrival)
+            currentTime = p[i].arrival;
 
-    for(int i = 1; i < n; i++) {
-        p[i].waiting = p[i-1].waiting + p[i-1].burst;
+        p[i].waiting = currentTime - p[i].arrival;
         p[i].turnaround = p[i].waiting + p[i].burst;
+
+        currentTime += p[i].burst;
 
         totalWT += p[i].waiting;
         totalTAT += p[i].turnaround;
