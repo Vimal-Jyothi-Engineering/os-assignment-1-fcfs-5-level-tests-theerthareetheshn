@@ -29,19 +29,17 @@ int main() {
         }
     }
 
-    int completionTime = 0;
+    int currentTime = 0;
     float totalWT = 0, totalTAT = 0;
 
     for(int i = 0; i < n; i++) {
-        if(completionTime < p[i].arrival) {
-            completionTime = p[i].arrival;
-            p[i].waiting = 0;
-        } else {
-            p[i].waiting = completionTime - p[i].arrival;
+        if(currentTime < p[i].arrival) {
+            currentTime = p[i].arrival;
         }
-        
-        completionTime += p[i].burst;
-        p[i].turnaround = p[i].waiting + p[i].burst;
+
+        p[i].waiting = currentTime - p[i].arrival;
+        currentTime += p[i].burst;
+        p[i].turnaround = currentTime - p[i].arrival;
 
         totalWT += p[i].waiting;
         totalTAT += p[i].turnaround;
@@ -58,7 +56,7 @@ int main() {
     }
 
     printf("\nAverage Waiting Time: %.2f ", totalWT / n);
-    printf("Average Turnaround Time: %.2f", totalTAT / n);
+    printf("Average Turnaround Time: %.2f\n", totalTAT / n);
 
     return 0;
 }
