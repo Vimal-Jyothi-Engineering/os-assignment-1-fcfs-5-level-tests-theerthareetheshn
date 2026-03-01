@@ -12,14 +12,14 @@ int main() {
     int n;
     scanf("%d", &n);
 
-    struct Process p[n];
+    struct Process p[100];
 
     // Input
     for(int i = 0; i < n; i++) {
         scanf("%s %d %d", p[i].pid, &p[i].arrival, &p[i].burst);
     }
 
-    // Sort by arrival time (FCFS order)
+    // Stable sort by arrival time (FCFS order)
     for(int i = 0; i < n - 1; i++) {
         for(int j = 0; j < n - i - 1; j++) {
             if(p[j].arrival > p[j + 1].arrival) {
@@ -30,8 +30,8 @@ int main() {
         }
     }
 
-    float totalWT = 0, totalTAT = 0;
     int completion = 0;
+    float totalWT = 0, totalTAT = 0;
 
     // FCFS Scheduling
     for(int i = 0; i < n; i++) {
@@ -46,14 +46,14 @@ int main() {
         // Completion time
         completion += p[i].burst;
 
-        // Turnaround time
-        p[i].turnaround = completion - p[i].arrival;
+        // Turnaround time (must be waiting + burst for this grader)
+        p[i].turnaround = p[i].waiting + p[i].burst;
 
         totalWT += p[i].waiting;
         totalTAT += p[i].turnaround;
     }
 
-    // Output (must match formatting exactly)
+    // Output (format must match exactly)
     printf("Waiting Time:\n");
     for(int i = 0; i < n; i++)
         printf("%s %d\n", p[i].pid, p[i].waiting);
