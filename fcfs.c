@@ -1,65 +1,68 @@
 #include <stdio.h>
 #include <string.h>
 
-typedef struct {
+struct Process {
     char pid[10];
     int arrival;
     int burst;
     int waiting;
     int turnaround;
-} Process;
+};
 
 int main() {
     int n;
     scanf("%d", &n);
 
-    Process p[n];
+    struct Process p[n];
 
-    for (int i = 0; i < n; i++) {
+    // Read input
+    for(int i = 0; i < n; i++) {
         scanf("%s %d %d", p[i].pid, &p[i].arrival, &p[i].burst);
     }
 
-    // Sort by arrival time
-    for (int i = 0; i < n - 1; i++) {
-        for (int j = 0; j < n - i - 1; j++) {
-            if (p[j].arrival > p[j + 1].arrival) {
-                Process temp = p[j];
-                p[j] = p[j + 1];
-                p[j + 1] = temp;
+    // Sort by arrival time (FCFS)
+    for(int i = 0; i < n - 1; i++) {
+        for(int j = i + 1; j < n; j++) {
+            if(p[i].arrival > p[j].arrival) {
+                struct Process temp = p[i];
+                p[i] = p[j];
+                p[j] = temp;
             }
         }
     }
 
-    int current_time = 0;
-    float total_wt = 0, total_tat = 0;
+    int currentTime = 0;
+    float totalWT = 0, totalTAT = 0;
 
-    for (int i = 0; i < n; i++) {
+    for(int i = 0; i < n; i++) {
 
-        if (current_time < p[i].arrival) {
-            current_time = p[i].arrival;
+        if(currentTime < p[i].arrival) {
+            currentTime = p[i].arrival;
         }
 
-        p[i].waiting = current_time - p[i].arrival;
+        p[i].waiting = currentTime - p[i].arrival;
         p[i].turnaround = p[i].waiting + p[i].burst;
 
-        current_time += p[i].burst;
+        currentTime += p[i].burst;
 
-        total_wt += p[i].waiting;
-        total_tat += p[i].turnaround;
+        totalWT += p[i].waiting;
+        totalTAT += p[i].turnaround;
     }
 
-    printf("Waiting Time: ");
-    for (int i = 0; i < n; i++) {
-        printf("%s %d ", p[i].pid, p[i].waiting);
+    // EXACT FORMAT
+
+    printf("Waiting Time:\n");
+    for(int i = 0; i < n; i++) {
+        printf("%s %d\n", p[i].pid, p[i].waiting);
     }
 
-    printf("\nTurnaround Time: ");
-    for (int i = 0; i < n; i++) {
-        printf("%s %d ", p[i].pid, p[i].turnaround);
+    printf("Turnaround Time:\n");
+    for(int i = 0; i < n; i++) {
+        printf("%s %d\n", p[i].pid, p[i].turnaround);
     }
 
-    printf("\nAverage Waiting Time: %.2f ", total_wt / n);
-    printf("Average Turnaround Time: %.2f", total_tat / n);
+    printf("Average Waiting Time: %.2f\n", totalWT / n);
+    printf("Average Turnaround Time: %.2f", totalTAT / n);
 
     return 0;
 }
