@@ -14,12 +14,11 @@ int main() {
 
     struct Process p[100];
 
-    // Input
     for(int i = 0; i < n; i++) {
         scanf("%s %d %d", p[i].pid, &p[i].arrival, &p[i].burst);
     }
 
-    // Sort only by arrival time (stable)
+    // Sort by arrival time (stable)
     for(int i = 0; i < n - 1; i++) {
         for(int j = 0; j < n - i - 1; j++) {
             if(p[j].arrival > p[j + 1].arrival) {
@@ -30,20 +29,23 @@ int main() {
         }
     }
 
-    int currentTime = 0;
     float totalWT = 0, totalTAT = 0;
+    int currentTime = 0;
 
-    // Grader-style FCFS
     for(int i = 0; i < n; i++) {
 
-        // If CPU is idle before first process
-        if(i == 0 && p[i].arrival > 0)
+        // Only adjust time if CPU is idle BEFORE starting this process
+        if(currentTime < p[i].arrival)
             currentTime = p[i].arrival;
 
-        p[i].waiting = currentTime;
-        p[i].turnaround = p[i].waiting + p[i].burst;
+        p[i].waiting = currentTime - p[i].arrival;
+
+        if(p[i].waiting < 0)
+            p[i].waiting = 0;
 
         currentTime += p[i].burst;
+
+        p[i].turnaround = p[i].waiting + p[i].burst;
 
         totalWT += p[i].waiting;
         totalTAT += p[i].turnaround;
