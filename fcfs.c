@@ -44,7 +44,7 @@ int main() {
         // Calculate turnaround time
         p[i].turnaround = p[i].waiting + p[i].burst;
         
-        // Update current time
+        // Update current time for next process
         currentTime += p[i].burst;
 
         totalWT += p[i].waiting;
