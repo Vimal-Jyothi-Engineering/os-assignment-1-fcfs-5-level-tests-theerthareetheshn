@@ -14,11 +14,12 @@ int main() {
 
     struct Process p[n];
 
+    // Input
     for(int i = 0; i < n; i++) {
         scanf("%s %d %d", p[i].pid, &p[i].arrival, &p[i].burst);
     }
 
-    // Sort by arrival time
+    // Sort by arrival time (FCFS order)
     for(int i = 0; i < n - 1; i++) {
         for(int j = 0; j < n - i - 1; j++) {
             if(p[j].arrival > p[j + 1].arrival) {
@@ -30,23 +31,29 @@ int main() {
     }
 
     float totalWT = 0, totalTAT = 0;
-    int currentTime = 0;
+    int completion = 0;
 
+    // FCFS Scheduling
     for(int i = 0; i < n; i++) {
 
-        if(currentTime < p[i].arrival)
-            currentTime = p[i].arrival;
+        // If CPU is idle, jump to arrival time
+        if(completion < p[i].arrival)
+            completion = p[i].arrival;
 
-        p[i].waiting = currentTime - p[i].arrival;
+        // Waiting time
+        p[i].waiting = completion - p[i].arrival;
 
-        currentTime += p[i].burst;
+        // Completion time
+        completion += p[i].burst;
 
-        p[i].turnaround = currentTime - p[i].arrival;
+        // Turnaround time
+        p[i].turnaround = completion - p[i].arrival;
 
         totalWT += p[i].waiting;
         totalTAT += p[i].turnaround;
     }
 
+    // Output (must match formatting exactly)
     printf("Waiting Time:\n");
     for(int i = 0; i < n; i++)
         printf("%s %d\n", p[i].pid, p[i].waiting);
