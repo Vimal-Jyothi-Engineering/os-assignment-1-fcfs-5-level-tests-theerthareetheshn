@@ -29,14 +29,20 @@ int main() {
         }
     }
 
+    int completionTime = 0;
     float totalWT = 0, totalTAT = 0;
-    int burstSum = 0;
 
     for(int i = 0; i < n; i++) {
-        p[i].waiting = burstSum;
-        burstSum += p[i].burst;
-        p[i].turnaround = p[i].waiting + p[i].burst;
+        if(completionTime < p[i].arrival) {
+            completionTime = p[i].arrival;
+            p[i].waiting = 0;
+        } else {
+            p[i].waiting = completionTime - p[i].arrival;
+        }
         
+        completionTime += p[i].burst;
+        p[i].turnaround = p[i].waiting + p[i].burst;
+
         totalWT += p[i].waiting;
         totalTAT += p[i].turnaround;
     }
